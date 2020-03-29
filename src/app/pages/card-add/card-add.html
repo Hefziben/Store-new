@@ -1,0 +1,83 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button fill="clear" (click)="onDismiss()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <div class="ion-margin-bottom">
+    <ion-text color="dark">
+      <h4 class="bold ion-no-margin">
+        {{ 'BILLING_INFO' | translate }}
+      </h4>
+      <div class="line"></div>
+    </ion-text>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" #form1="ngForm" novalidate>
+<!-- 
+    <ngx-stripe-card [options]="cardOptions" [elementsOptions]="elementsOptions">
+    </ngx-stripe-card> -->
+
+    <ion-list lines="none">
+
+      <ion-row>
+        <ion-col size="12">
+          <ion-label position="stacked" color="medium">
+            <span class="bold">{{ 'CARDHOLDER_NAME' | translate }}</span>
+          </ion-label>
+          <ion-item color="light" lines="none">
+            <ion-input type="text" formControlName="name"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <div class="ion-text-center">
+        <ion-button type="submit" shape="round" color="primary" [disabled]="isSaving" strong>
+          <ion-spinner color="light" *ngIf="isSaving"></ion-spinner>
+          <span *ngIf="!isSaving">{{ 'SAVE' | translate }}</span>
+        </ion-button>
+      </div>
+
+    </ion-list>
+
+  </form>
+
+</ion-content>
+<ion-footer>
+  <ion-tab-bar>
+
+    <ion-tab-button tab="home" layout="icon-top">
+      <img style="max-width: 50%; margin-top:inherit;object-fit: contain;" src="../../../assets/imgs/home.png">
+      <ion-label>{{ 'HOME' | translate }}</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="browse" layout="icon-top">
+      <img  style="max-width: 50%; margin-top:inherit;object-fit: contain;" src="../../../assets/imgs/squares.svg" >
+      <ion-label>{{ 'BROWSE' | translate }}</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="account/favorites" layout="icon-top" >
+      <img   style="max-width: 50%;max-height:50%; margin-top:inherit;"  src="../../../assets/imgs/heart.svg">
+      <ion-label style="font-size: inherit;">{{ 'FAVORITES' | translate }}</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="cart" layout="icon-top">
+      <img  style="max-width: 50%;max-height:50%; margin-top:inherit;" src="../../../assets/imgs/shopping_cart.svg" >
+      <ion-label>{{ 'CART' | translate }}</ion-label>
+      <ion-badge style="font-size: inherit;" color="light" 
+      *ngIf="preference.cartCount">
+      {{ preference.cartCount }}
+    </ion-badge>
+    </ion-tab-button>
+    <ion-tab-button tab="account" layout="icon-top">
+      <img  style="max-width: 50%;max-height:50%; margin-top:inherit;" src="../../../assets/imgs/profile.svg" >
+      <ion-label>{{ 'ACCOUNT' | translate }}</ion-label>
+    </ion-tab-button>
+
+  </ion-tab-bar>
+
+ 
+</ion-footer>

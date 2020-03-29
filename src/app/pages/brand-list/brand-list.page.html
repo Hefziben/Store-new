@@ -1,0 +1,88 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar fixed>
+    <ion-buttons slot="start">
+ <ion-back-button color="dark" ></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content #container scrollEvents="true">
+
+  <ion-refresher slot="fixed" (ionRefresh)="loadData($event)">
+    <ion-refresher-content pullingText="{{ 'PULL_TO_REFRESH' | translate }}"
+      refreshingText="{{ 'REFRESHING' | translate }}">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <ion-grid fixed>
+
+    <div class="ion-text-center" *ngIf="isLoadingViewVisible">
+      <ion-spinner></ion-spinner>
+    </div>
+
+    <empty-view *ngIf="isErrorViewVisible" icon="alert-circle-outline" [text]="'ERROR_DATA' | translate">
+    </empty-view>
+
+    <empty-view *ngIf="isEmptyViewVisible" icon="alert-circle-outline" [text]="'EMPTY_DATA' | translate">
+    </empty-view>
+
+    <ion-row class="ion-padding ion-align-items-center" *ngIf="isContentViewVisible">
+      <ion-col>
+        <h3 class="ion-no-margin">
+          {{ 'BRANDS' | translate }}
+        </h3>
+      </ion-col>
+      <ion-col class="ion-text-end">
+        <ion-button strong class="no-shadow ion-text-capitalize" shape="round" color="medium" [routerLink]="['../items']">
+          {{ 'VIEW_ALL' | translate }}
+        </ion-button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="isContentViewVisible" [@staggerIn]="brands.length">
+      <ion-col size-xs="4" size-md="3" class="ion-text-center" *ngFor="let brand of brands;trackBy:trackByFn">
+        <div [routerLink]="['../items']" [queryParams]="{ brand: brand.id }">
+          <div class="bg-img" defaultImage="./assets/imgs/placeholder.png" [customObservable]="loadAndScroll"
+            [lazyLoad]="brand.image?.url()">
+          </div>
+          <p class="link ellipsis">
+            {{ brand.name }}
+          </p>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-content>
+<ion-footer>
+  <ion-tab-bar>
+
+    <ion-tab-button tab="home" layout="icon-top">
+      <img style="max-width: 50%; margin-top:inherit;object-fit: contain;" src="../../../assets/imgs/home.png">
+      <ion-label>{{ 'HOME' | translate }}</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="browse" layout="icon-top">
+      <img  style="max-width: 50%; margin-top:inherit;object-fit: contain;" src="../../../assets/imgs/squares.svg" >
+      <ion-label>{{ 'BROWSE' | translate }}</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="account/favorites" layout="icon-top" >
+      <img   style="max-width: 50%;max-height:50%; margin-top:inherit;"  src="../../../assets/imgs/heart.svg">
+      <ion-label style="font-size: inherit;">{{ 'FAVORITES' | translate }}</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="cart" layout="icon-top">
+      <img  style="max-width: 50%;max-height:50%; margin-top:inherit;" src="../../../assets/imgs/shopping_cart.svg" >
+      <ion-label>{{ 'CART' | translate }}</ion-label>
+      <ion-badge style="font-size: inherit;" color="light" 
+      *ngIf="preference.cartCount">
+      {{ preference.cartCount }}
+    </ion-badge>
+    </ion-tab-button>
+    <ion-tab-button tab="account" layout="icon-top">
+      <img  style="max-width: 50%;max-height:50%; margin-top:inherit;" src="../../../assets/imgs/profile.svg" >
+      <ion-label>{{ 'ACCOUNT' | translate }}</ion-label>
+    </ion-tab-button>
+
+  </ion-tab-bar>
+
+ 
+</ion-footer>

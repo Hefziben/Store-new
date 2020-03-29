@@ -1,0 +1,12 @@
+<div style="background-color:white;">
+  <div>
+    <h6>{{ 'CHOOSE_VARIATION' | translate }}</h6>
+  </div>
+  <div>
+    <ion-button class="btn-variation" size="small" text-capitalize margin-end
+    [color]="selectedVariation?.id === variation.id ? 'primary' : 'light'"
+    (click)="onVariationTouched(variation)" *ngFor="let variation of variations">
+    {{ variation.name }}
+  </ion-button>
+  </div>
+</div>

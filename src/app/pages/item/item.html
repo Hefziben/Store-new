@@ -1,0 +1,327 @@
+<ion-header style="height: 0;">
+  <ion-toolbar fixed>
+    <ion-buttons class="btn-header" slot="start">
+ <ion-back-button color="dark" ></ion-back-button>
+    </ion-buttons>
+    <ion-title></ion-title>
+    <ion-buttons slot="end">
+
+      <ion-button class="btn-header" color="dark" [disabled]="!item" (click)="onLike()">
+        <ion-icon slot="icon-only" [name]="isLiked? 'heart' : 'heart-outline'" color="danger">
+        </ion-icon>
+      </ion-button>
+      <ion-button class="btn-header" [disabled]="!item" style=" margin-left: 5px;" (click)="onShare()">
+        <ion-icon mode="ios" color="dark" slot="icon-only" name="share-social"></ion-icon>
+        </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content #container scrollEvents="true" fullscreen="true">
+
+  <web-social-share (closed)="webSocialShare.onClosed()" [show]="webSocialShare.show" [share]="webSocialShare.share">
+    <ion-icon class="block" name="logo-facebook" slot="facebook"
+      style="color:var(--ion-color-fb);width:36px;height:36px;">
+    </ion-icon>
+    <ion-icon class="block" name="logo-twitter" slot="twitter"
+      style="color:var(--ion-color-twitter);width:36px;height:36px;">
+    </ion-icon>
+    <ion-icon class="block" name="logo-whatsapp" slot="whatsapp"
+      style="color:var(--ion-color-whatsapp);width:36px;height:36px;">
+    </ion-icon>
+    <ion-icon class="block" name="copy-outline" slot="copy"
+      style="color: var(--ion-color-medium);width:36px;height:36px;">
+    </ion-icon>
+  </web-social-share>
+
+  <ion-grid style="padding: 0; margin:0;background-color: #f4f5f8;" fixed>
+
+    <empty-view *ngIf="isErrorViewVisible" icon="alert-circle-outline" [text]="'ERROR_DATA' | translate">
+    </empty-view>
+
+    <empty-view *ngIf="isEmptyViewVisible" icon="alert-circle-outline" [text]="'EMPTY_DATA' | translate">
+    </empty-view>
+
+    <ion-row class="ion-justify-content-center">
+      <ion-col size-xs="12" size-lg="12" style="margin: 0;padding: 0;">
+
+        <div *ngIf="isLoadingViewVisible">
+
+          <ion-row>
+            <ion-col size-xs="12" size-lg="6">
+              <ngx-skeleton-loader count="1"
+                [theme]="{ 'border-radius': '0', margin: '0 0 16px', height: '250px', width: '100%' }">
+              </ngx-skeleton-loader>
+            </ion-col>
+            <ion-col size-xs="12" size-lg="6">
+              <ngx-skeleton-loader count="4" [theme]="{ 'border-radius': '0', height: '10px' }">
+              </ngx-skeleton-loader>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="bg-light ion-margin-vertical">
+            <ion-col>
+              <div class="ion-padding">
+                <ngx-skeleton-loader count="16" [theme]="{ 'border-radius': '0', height: '10px' }">
+                </ngx-skeleton-loader>
+              </div>
+            </ion-col>
+          </ion-row>
+
+        </div>
+
+      
+
+          <ion-row *ngIf="isContentViewVisible" style="background-color: white;">
+            <ion-col style="padding: 0;margin: 0;" size-xs="12" size-lg="6" >
+              <!-- Slide List -->
+              <div *ngIf="item?.images.length">
+          
+                <ion-slides style="padding: 0;margin: 0;width: 100%; " class="main" #slides pager gallerize="itemGallery" selector=".bg-img"
+                (ionSlidesDidLoad)="onSlidesDidLoad($event)" (ionSlideWillChange)="onSlidesWillChange($event)"
+                *ngIf="item && item.images?.length">
+                <ion-slide *ngFor="let photo of item?.images">
+                  <div class="slide bg-img" [attr.imageSrc]="photo.url()" [attr.thumbSrc]="photo.url()"
+                    [lazyLoad]="photo.url()" [customObservable]="slidesObservable"
+                    defaultImage="./assets/imgs/placeholder-large.jpg">
+                  </div>
+                </ion-slide>
+              </ion-slides>
+              </div>
+          
+            </ion-col>
+            <ion-row style=" width: 100%">
+              <ion-col size="12" >
+                <ion-row style="width: 100%;" *ngIf="item?.salePrice">
+                  <ion-col size="4" >
+          
+                    <ion-label style="color: #f04141;font-size: 20px;font-weight: 600;margin-left: 10px;" > 
+                      {{ item?.salePrice | currency:"JD ":"symbol"  }}
+                    </ion-label>
+                  </ion-col>
+                  <ion-col size="4" style="padding-top: 10px;" *ngIf="item?.salePrice">
+                    <ion-text color="medium">
+                      <s class="bold" ion-text color="gray" style="font: size 15px" >
+                        {{ item.price | currency:"JD ":"symbol" }}
+                      </s>
+                    </ion-text>
+                  </ion-col>
+                  <ion-col size="4" style="text-align: left;padding-top: 10px;" >
+                    
+                    <ion-badge  style="font-style: italic;font-size: 15px; margin-left: 10px;" color="danger">{{ item.discount | percent }}-</ion-badge>
+                  </ion-col>
+                </ion-row>
+                <ion-label style="color: #f04141;font-size: 20px;font-weight: 600;margin-left: 10px;"  *ngIf="!item?.salePrice"> {{ item?.price | currency:"JD ":"symbol" }}</ion-label>
+                
+              </ion-col>
+             
+            </ion-row>
+            
+  <ion-col  style="background-color: white;" size="12" size-xs="12" size-lg="6">
+    <p style="font-size: 12;margin-left: 10px;">{{ item?.name }}</p>
+  </ion-col>
+    <ion-row style="padding: 0;margin: 0;background-color: white;">
+      
+
+  </ion-row>
+            
+
+          </ion-row>
+          <ion-row style="padding: 0;margin: 0" justify-content-center>
+            <ion-col size-xs="12" size-lg="10">
+      
+              <div *ngIf="isLoadingViewVisible">
+      
+                <ion-row>
+                  <ion-col size-xs="12" size-lg="6">
+                    <ngx-skeleton-loader count="1"
+                      [theme]="{ 'border-radius': '0', margin: '0 0 16px', height: '250px', width: '100%' }">
+                    </ngx-skeleton-loader>
+                  </ion-col>
+                  <ion-col size-xs="12" size-lg="6">
+                    <ngx-skeleton-loader count="4" [theme]="{ 'border-radius': '0', height: '10px' }">
+                    </ngx-skeleton-loader>
+                  </ion-col>
+                </ion-row>
+      
+                <ion-row margin-vertical class="bg-light">
+                  <ion-col>
+                    <div padding>
+                      <ngx-skeleton-loader count="16" [theme]="{ 'border-radius': '0', height: '10px' }">
+                      </ngx-skeleton-loader>
+                    </div>
+                  </ion-col>
+                </ion-row>
+      
+              </div>
+      
+              <div *ngIf="isContentViewVisible">
+      
+            
+                <ion-row *ngIf="item?.hasVariations()" style="padding: 0;margin: 0;background-color: white; margin-top: 10px;display: flex;flex-direction: column">
+                  <div style="margin-left: 10px;">
+                    <h6>{{ 'CHOOSE_VARIATION' | translate }}</h6>
+                  </div>
+                  <div style="margin-left: 10px;margin-bottom: 10px;">
+                    <ion-button class="btn-variation" size="small" text-capitalize margin-end
+                    [color]="selectedVariation?.id === variation.id ? 'dark' : 'light'"
+                    (click)="onVariationTouched(variation)" *ngFor="let variation of variations">
+                    {{ variation.name }}
+                  </ion-button>
+                  </div>
+                </ion-row>
+                <ion-row style="background-color: white;padding: 0;margin: 0;margin-top: 10px;">
+                  <div style="margin: 10px;" padding *ngIf="itemDescription">
+                    <ion-label style="font-weight: 600;">{{ 'ITEM_DESCRIPTION' | translate }}</ion-label>
+                    <div text-justify [innerHTML]="itemDescription"></div>
+                  </div>
+                </ion-row>
+      
+                <ion-row style="background-color: white;margin-top: 16px" margin-vertical >
+                  <ion-col *ngFor="let review of reviews | slice:0:1;trackBy:trackByFn">
+                     <div  padding>
+                      <p style="font-weight: bold;" no-margin>
+                        {{ 'REVIEWS' | translate }} ( {{reviews.length}} )
+                      </p>
+                      <ion-row>
+                        <ion-col *ngIf="review.rating" size="12">
+                          <div style="display: flex; flex-direction: row;justify-content: flex-start;">
+                            <p style="font-weight: bold;"> {{averageRating}}</p> <p style="margin-right: 5px;">/5</p>
+                            <!-- <star-rating style=" align-self: center;" [value]="item.rating" checkedcolor="#f2b01e" uncheckedcolor="gray" size="18px"
+                            readonly="true">
+                          </star-rating> -->
+                          <ion-rating [rate]="averageRating"
+                          readonly="true"
+                          size="small">
+                        </ion-rating>
+                          </div>                   
+                        </ion-col>
+      
+                        <ion-row 
+                          style="display: flex; flex-direction: row;justify-content: flex-start;">
+                          <ion-col size="8">
+                            <div>
+                              <ion-avatar style=" padding: 0; margin: 0; border-radius: 5px;max-height: 50px; max-width: 50px;" slot="start">
+                                <img style="max-height: 50px; max-width: 50px;" defaultImage="./assets/imgs/avatar.png"
+                                  [lazyLoad]="review.user?.photo?.url()" [scrollObservable]="loadAndScroll" />
+                              </ion-avatar>
+                            </div>
+                        
+                          </ion-col>
+                        
+                        </ion-row>
+                        <ion-col *ngIf="reviewCount >= 5" style="border: black solid 1px" size="1" [routerLink]="['./reviews']">
+                          <p style="align-self: center; text-align: center;font-weight: bold; font-size: 12px;">...</p>
+                        
+                        </ion-col>
+      
+                      </ion-row>
+      
+                      <div *ngIf="!reviews.length" style="height:170px;" text-center>
+                        <div class="flex-center">
+                          <ion-text color="medium">
+                            <p>
+                              {{ 'EMPTY_REVIEWS' | translate }}
+                            </p>
+                          </ion-text>
+                        </div>
+      
+                      </div>
+      
+                      <div *ngFor="let review of reviews;trackBy:trackByFn" style=" padding: 0; margin: 0;">
+                        <ion-row>
+                          <ion-col size="6">
+                            <ion-text color="dark">
+                              <p class="no-margin">
+                                {{ review.user?.name || ('GUEST' | translate) }}
+                              </p>
+                            </ion-text>
+                          </ion-col>
+                          <ion-col size="6">
+                            <ion-text  color="medium">
+                              <p class="no-margin" >
+                                {{ review.createdAt | date:'mediumDate' }}
+                              </p>
+                            </ion-text>
+                          </ion-col>
+                          
+                        </ion-row>
+                        <star-rating [value]="review.rating" checkedcolor="#f2b01e" uncheckedcolor="gray" size="14px"
+                              readonly="true">
+                            </star-rating>
+                            <ion-row>
+                              <ion-col size="12">
+                                <p style="text-align: start;"  class="no-margin">{{ review.comment }}</p>                        </ion-col>
+                            </ion-row>                
+                      </div>
+      
+                      <div style="text-align: center;" margin-vertical text-center *ngIf="reviews.length">
+                        <ion-button color="light" [routerLink]="['./reviews']">
+                          {{ 'VIEW_ALL_REVIEWS' | translate }}
+                        </ion-button>
+                      </div>
+                    </div>
+      
+                  </ion-col>
+                </ion-row>
+                <section *ngIf="item?.relatedItems?.length"  style="padding: 0;margin: 0;background-color: #f4f5f8;" class="cards" margin-vertical >
+                  <ion-col style="padding: 0;margin: 0" size="6" text-start>
+                    <p style="font-weight: bolder;margin-left: 20px;margin-bottom: 10px;"  no-margin>
+                      {{ 'RELATED_ITEMS' | translate }}
+                    </p>
+                  </ion-col>
+                  <div>
+                    <ion-row >
+                      <ion-col style="margin-left: 6px;padding: 0;margin-bottom: 8px;"size-xs="5.7" size-sm="4" size-md="3" *ngFor="let item of item?.relatedItems">
+                        <app-shop-item2 (ionSlideWillChange)="onSlidesRelatedDrag()" [item]="item" [customObservable]="slidesRelatedObservable" routerLink="/1/home/items/{{item.slug}}">
+                        </app-shop-item2>
+                      </ion-col>
+                    </ion-row >
+                  </div>
+                </section>
+         
+      
+              </div>
+      
+            </ion-col>
+          </ion-row>
+
+        
+
+      </ion-col>
+    </ion-row>
+
+  </ion-grid>
+
+</ion-content>
+<ion-footer>
+  <ion-tab-bar>
+
+    <ion-tab-button tab="home" layout="icon-top">
+      <img style="max-width: 65%;height:inherit; margin-top:6px;" src="../../../assets/imgs/home.png">
+      <ion-label>{{ 'HOME' | translate }}</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="cart" layout="icon-top">
+      <img  style="max-width: 70%;height:inherit; margin-top:10px;" src="../../../assets/imgs/shopping_cart.svg" >
+      <ion-label>{{ 'CART' | translate }}</ion-label>
+      <ion-badge style="font-size: inherit;" color="light" 
+      *ngIf="preference.cartCount">
+      {{ preference.cartCount }}
+    </ion-badge>
+    </ion-tab-button>    
+
+    <ion-tab-button tab="account/favorites" layout="icon-top" >
+      <img style="max-width: 36%;max-height:36%; margin-top:6px;"  src="../../../assets/imgs/heart.svg">
+      <ion-label style="font-size: inherit;">{{ 'FAVORITES' | translate }}</ion-label>
+    </ion-tab-button>
+    <ion-button style="width: 160px;height: 35px; margin-right: 10px; --box-shadow:none;" text-uppercase text-center size="small" strong shape="round" color="secondary"
+    [disabled]="isAddingToCart" (click)="onAddToCart()">
+    <ion-spinner color="primary" *ngIf="isAddingToCart"></ion-spinner>
+    <span style="color: black;" *ngIf="!isAddingToCart">{{ 'ADD_TO_CART' | translate }}</span>
+  </ion-button>
+
+  </ion-tab-bar>
+
+ 
+</ion-footer>

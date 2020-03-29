@@ -1,0 +1,27 @@
+
+<div>
+  <p class="ion-no-margin" *ngIf="item.salePrice" style="text-align: right;" >
+    <ion-badge  style="border-radius: 12px;font-style: italic;font-size: 12px; " color="danger">{{ item.discount | percent }}-</ion-badge>
+    
+  </p>
+  <img style="padding: 5px;" src="./assets/imgs/placeholder.png"
+    [customObservable]="scrollObservable" [lazyLoad]="item.featuredImageThumb?.url()" />
+  <div>
+    <ion-text style="text-align: center;" color="dark">
+      <p class="link ellipsis text-medium black">{{item.name}} </p>
+    </ion-text> 
+    <ion-text  color="medium">
+      <s class="bold" ion-text color="gray" style="font-size:14px" >
+        {{ item.price | currency:"JD ":"symbol" }}
+      </s>
+    </ion-text>
+    <ion-text color="dark" style="display: flex;align-items: center; flex-direction: column;">
+      <p class="ion-no-margin" *ngIf="item.salePrice">
+        <span style="font-size: 16px;color: red;" class="bold">{{ item.salePrice | currency:"JD ":"symbol" }}&nbsp;</span>
+      </p>
+      <p style="font-size: 16px;color: red;" class="bold" class="ion-no-margin" *ngIf="!item.salePrice">
+        {{ item.price | currency:"JD ":"symbol" }}
+      </p>
+    </ion-text>
+  </div>
+</div>

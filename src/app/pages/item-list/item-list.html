@@ -1,0 +1,125 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="secondary" fixed>
+    <ion-buttons slot="start">
+ <ion-back-button color="dark" ></ion-back-button>
+    </ion-buttons>
+    <ion-searchbar color="light" mode="ios" [placeholder]="'SEARCH_PLACEHOLDER' | translate" (ionInput)="onSearch($event)"
+      (ionClear)="onClearSearch()">
+    </ion-searchbar>
+    <ion-buttons slot="end">
+      <ion-button color="dark" size="small" class="ion-text-uppercase" (click)="onPresentFilterModal()">
+        <ion-icon slot="start" name="funnel"></ion-icon>
+        <span class="text-small">{{ 'REFINE' | translate }}</span>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content #container scrollEvents="true">
+
+  <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
+    <ion-refresher-content pullingText="{{ 'PULL_TO_REFRESH' | translate }}"
+      refreshingText="{{ 'REFRESHING' | translate }}"></ion-refresher-content>
+  </ion-refresher>
+
+  <div slot="fixed" style="left: 16px; right: 16px">
+    <ion-grid class="relative" fixed *ngIf="suggestions.length">
+      <ion-list lines="none" class="ion-no-margin" class="shadow autocomplete" *ngIf="suggestions.length"
+        [@staggerIn]="suggestions.length">
+        <ion-item class="hover" button detail="false" style="--min-height: 70px;" *ngFor="let suggestion of suggestions;trackBy:trackByFn"
+          (click)="this.suggestions = [];" [routerLink]="['./' + suggestion.slug]">
+          <ion-label>
+            <ion-text color="dark">
+              <span class="link bold text-medium">
+                {{ suggestion.name }}
+              </span>
+            </ion-text>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-grid>
+  </div>
+  <div class="custom-select" *ngIf="isContentViewVisible">
+    <ion-item lines="none">
+      <ion-label>
+        <ion-text class="bold" color="medium">
+          {{ 'SORT_BY' | translate }}
+        </ion-text>
+      </ion-label>
+
+      <ion-select [(ngModel)]="selectedSortOption" (ionChange)="onSortOptionTouched($event)" [compareWith]="compareSortOption"
+        [interfaceOptions]="customPopoverOptions" interface="popover">
+        <ion-select-option [value]="option" *ngFor="let option of sortOptions">
+          {{ (option.sortByField + '_' + option.sortBy) | uppercase | translate }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+  </div>
+  <ion-grid style="background:#f4f5f8" fixed>
+
+    <empty-view *ngIf="isErrorViewVisible" icon="alert-circle-outline" [text]="'ERROR_DATA' | translate">
+    </empty-view>
+
+    <empty-view *ngIf="isEmptyViewVisible" image="./assets/imgs/price-tag.svg" imageWidth="150"
+      [text]="'EMPTY_DATA' | translate">
+    </empty-view>
+
+
+
+    <ion-list style="background-color: #f4f5f8;" [@staggerIn]="items.length" *ngIf="isContentViewVisible">
+      <ion-row style="background-color: #f4f5f8;">
+        <ion-col style="margin-left: 6px;padding: 0;margin-bottom: 8px;"size-xs="5.7" size-sm="4" size-md="3" *ngFor="let item of items;trackBy:trackByFn">
+          <app-shop-item2 [item]="item" [customObservable]="loadAndScroll"
+          (click)="onItemTouched(item)">
+          </app-shop-item2>
+        </ion-col>
+      </ion-row>
+      <ion-infinite-scroll (ionInfinite)="onLoadMore($event)">
+        <ion-infinite-scroll-content></ion-infinite-scroll-content>
+      </ion-infinite-scroll>
+    </ion-list>
+
+    <ion-row *ngIf="isLoadingViewVisible" class="ion-justify-content-center">
+      <ion-col class="ion-text-center" size-xs="6" size-sm="4" size-md="4" size-lg="3" *ngFor="let item of skeletonArray">
+        <ngx-skeleton-loader count="1" appearance="circle"
+          [theme]="{ width: '100%', height: '240px', 'border-radius': '0' }">
+        </ngx-skeleton-loader>
+      </ion-col>
+    </ion-row>
+
+  </ion-grid>
+
+</ion-content>
+<ion-footer>
+  <ion-tab-bar>
+
+    <ion-tab-button tab="home" layout="icon-top">
+      <img style="max-width: 50%; margin-top:inherit;object-fit: contain;" src="../../../assets/imgs/home.png">
+      <ion-label>{{ 'HOME' | translate }}</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="browse" layout="icon-top">
+      <img  style="max-width: 50%; margin-top:inherit;object-fit: contain;" src="../../../assets/imgs/squares.svg" >
+      <ion-label>{{ 'BROWSE' | translate }}</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="account/favorites" layout="icon-top" >
+      <img   style="max-width: 50%;max-height:50%; margin-top:inherit;"  src="../../../assets/imgs/heart.svg">
+      <ion-label style="font-size: inherit;">{{ 'FAVORITES' | translate }}</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="cart" layout="icon-top">
+      <img  style="max-width: 50%;max-height:50%; margin-top:inherit;" src="../../../assets/imgs/shopping_cart.svg" >
+      <ion-label>{{ 'CART' | translate }}</ion-label>
+      <ion-badge style="font-size: inherit;" color="light" 
+      *ngIf="preference.cartCount">
+      {{ preference.cartCount }}
+    </ion-badge>
+    </ion-tab-button>
+    <ion-tab-button tab="account" layout="icon-top">
+      <img  style="max-width: 50%;max-height:50%; margin-top:inherit;" src="../../../assets/imgs/profile.svg" >
+      <ion-label>{{ 'ACCOUNT' | translate }}</ion-label>
+    </ion-tab-button>
+
+  </ion-tab-bar>
+
+ 
+</ion-footer>

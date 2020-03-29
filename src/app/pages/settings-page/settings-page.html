@@ -1,0 +1,71 @@
+<ion-header class="ion-no-border">
+    <ion-toolbar>
+      <ion-buttons slot="end">
+        <ion-button (click)="onDismiss()">
+          <ion-icon slot="start" name="close"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+      <ion-title>{{ 'SETTINGS' | translate }}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+<ion-content>
+
+  <ion-item color="light" lines="none" class="ion-margin-vertical" *ngIf="isHybrid()">
+    <ion-label>{{ 'PUSH_NOTIFICATIONS' | translate }}</ion-label>
+    <ion-toggle (ionChange)="onChangeIsPushEnabled($event)" [(ngModel)]="preference.isPushEnabled">
+    </ion-toggle>
+  </ion-item>
+
+  <ion-list>
+    <ion-radio-group allowEmptySelection="false" [value]="preference.lang" (ionChange)="onChangeLang($event)">
+      <ion-list-header>
+        <span class="bold" color="dark">{{ 'LANGUAGE' | translate }}</span>
+      </ion-list-header>
+      <ion-item color="light">
+        <ion-label>{{ 'ENGLISH' | translate }}</ion-label>
+        <ion-radio value="en"></ion-radio>
+      </ion-item>
+      <ion-item color="light">
+        <ion-label>{{ 'SPANISH' | translate }}</ion-label>
+        <ion-radio value="es"></ion-radio>
+      </ion-item>
+      <ion-item color="light" lines="none">
+        <ion-label>{{ 'ARABIC' | translate }}</ion-label>
+        <ion-radio value="ar"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+  </ion-list>
+</ion-content>
+<ion-footer>
+  <ion-tab-bar>
+
+    <ion-tab-button tab="home" layout="icon-top">
+      <img style="max-width: 50%; margin-top:inherit;object-fit: contain;" src="../../../assets/imgs/home.png">
+      <ion-label>{{ 'HOME' | translate }}</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="browse" layout="icon-top">
+      <img  style="max-width: 50%; margin-top:inherit;object-fit: contain;" src="../../../assets/imgs/squares.svg" >
+      <ion-label>{{ 'BROWSE' | translate }}</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="account/favorites" layout="icon-top" >
+      <img   style="max-width: 50%;max-height:50%; margin-top:inherit;"  src="../../../assets/imgs/heart.svg">
+      <ion-label style="font-size: inherit;">{{ 'FAVORITES' | translate }}</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="cart" layout="icon-top">
+      <img  style="max-width: 50%;max-height:50%; margin-top:inherit;" src="../../../assets/imgs/shopping_cart.svg" >
+      <ion-label>{{ 'CART' | translate }}</ion-label>
+      <ion-badge style="font-size: inherit;" color="light" 
+      *ngIf="preference.cartCount">
+      {{ preference.cartCount }}
+    </ion-badge>
+    </ion-tab-button>
+    <ion-tab-button tab="account" layout="icon-top">
+      <img  style="max-width: 50%;max-height:50%; margin-top:inherit;" src="../../../assets/imgs/profile.svg" >
+      <ion-label>{{ 'ACCOUNT' | translate }}</ion-label>
+    </ion-tab-button>
+
+  </ion-tab-bar>
+
+ 
+</ion-footer>

@@ -1,0 +1,94 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="secondary">
+    <ion-buttons slot="start">
+      <ion-button (click)="onDismiss()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title style="color: black;">{{ 'ADDRESSES' | translate }}</ion-title>
+     </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+
+  <ion-refresher slot="fixed" (ionRefresh)="loadData($event)">
+    <ion-refresher-content pullingText="{{ 'PULL_TO_REFRESH' | translate }}"
+      refreshingText="{{ 'REFRESHING' | translate }}">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <empty-view *ngIf="isErrorViewVisible" icon="alert-circle-outline" [text]="'ERROR_DATA' | translate">
+  </empty-view>
+
+  <empty-view *ngIf="isEmptyViewVisible" image="./assets/imgs/undraw_address_udes.svg" imageWidth="200"
+    [text]="'EMPTY_ADDRESSES' | translate">
+  </empty-view>
+
+  <ion-list lines="none" class="ion-margin-top" *ngIf="isContentViewVisible">
+    <ion-item class="ion-text-wrap ion-margin-bottom" color="light" *ngFor="let address of addresses">
+      <ion-icon name="pin" color="secondary" slot="start"></ion-icon>
+      <ion-label>
+        <h2 class="bold">{{ address.name }}</h2>
+        <p>{{ address }}</p>
+        <p>{{ 'CONTACT_PHONE' | translate }}: {{ address.phone }}</p>
+      </ion-label>
+      <ion-button strong color="secondary" style="color: black;" slot="end" (click)="onAddressTouched(address)">
+        <ion-label style="color: black;">   {{ 'SELECT' | translate }}</ion-label>
+      
+      </ion-button>
+    </ion-item>
+  </ion-list>
+  <ion-grid *ngIf="isEmptyViewVisible" fixed style="margin-top: 79%;">
+    <ion-buttons >
+      <ion-button style="height: auto;" (click)="onAddButtonTouched()">
+        <img style="max-width: 14%;height:inherit" src="../../../assets/imgs/add.png" alt="">
+      </ion-button>
+    </ion-buttons>
+  </ion-grid>
+  <ion-grid *ngIf="!isEmptyViewVisible" fixed style="margin-top: 60%;">
+    <ion-buttons >
+      <ion-button style="height: auto;" (click)="onAddButtonTouched()">
+        <img style="max-width: 14%;height:inherit" src="../../../assets/imgs/add.png" alt="">
+      </ion-button>
+    </ion-buttons>
+  </ion-grid>
+
+  <div class="ion-margin-vertical" *ngIf="isLoadingViewVisible">
+    <ngx-skeleton-loader count="12" [theme]="{ 'border-radius': '0', height: '60px' }">
+    </ngx-skeleton-loader>
+  </div>
+
+</ion-content>
+<ion-footer>
+  <ion-tab-bar>
+
+    <ion-tab-button tab="home" layout="icon-top">
+      <img style="max-width: 50%; margin-top:inherit;object-fit: contain;" src="../../../assets/imgs/home.png">
+      <ion-label>{{ 'HOME' | translate }}</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="browse" layout="icon-top">
+      <img  style="max-width: 50%; margin-top:inherit;object-fit: contain;" src="../../../assets/imgs/squares.svg" >
+      <ion-label>{{ 'BROWSE' | translate }}</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="account/favorites" layout="icon-top" >
+      <img   style="max-width: 50%;max-height:50%; margin-top:inherit;"  src="../../../assets/imgs/heart.svg">
+      <ion-label style="font-size: inherit;">{{ 'FAVORITES' | translate }}</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="cart" layout="icon-top">
+      <img  style="max-width: 50%;max-height:50%; margin-top:inherit;" src="../../../assets/imgs/shopping_cart.svg" >
+      <ion-label>{{ 'CART' | translate }}</ion-label>
+      <ion-badge style="font-size: inherit;" color="light" 
+      *ngIf="preference.cartCount">
+      {{ preference.cartCount }}
+    </ion-badge>
+    </ion-tab-button>
+    <ion-tab-button tab="account" layout="icon-top">
+      <img  style="max-width: 50%;max-height:50%; margin-top:inherit;" src="../../../assets/imgs/profile.svg" >
+      <ion-label>{{ 'ACCOUNT' | translate }}</ion-label>
+    </ion-tab-button>
+
+  </ion-tab-bar>
+
+ 
+</ion-footer>

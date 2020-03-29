@@ -1,0 +1,91 @@
+<ion-header class="ion-no-border">
+
+  <ion-toolbar fixed>
+    <ion-buttons slot="start">
+ <ion-back-button color="dark" ></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ 'PAYMENT' | translate }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="onAddButtonTouched()">
+        <ion-icon name="add" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content>
+
+  <ion-refresher slot="fixed" (ionRefresh)="loadData($event)">
+    <ion-refresher-content pullingText="{{ 'PULL_TO_REFRESH' | translate }}"
+      refreshingText="{{ 'REFRESHING' | translate }}">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <ion-grid fixed>
+
+    <empty-view *ngIf="isErrorViewVisible" icon="alert-circle-outline" [text]="'ERROR_DATA' | translate">
+    </empty-view>
+
+    <empty-view *ngIf="isEmptyViewVisible" image="./assets/imgs/undraw_credit_card_df1m.svg" imageWidth="200"
+      [text]="'EMPTY_CARDS' | translate">
+    </empty-view>
+
+    <ion-row class="ion-justify-content-center" *ngIf="isContentViewVisible">
+      <ion-col size-xs="12" size-lg="9">
+        <ion-list lines="none" class="ion-margin-top">
+          <ion-item class="radius ion-margin-bottom" color="light" *ngFor="let card of cards">
+            <img src="./assets/imgs/{{card.formatBrand()}}.png" width="40" slot="start" />
+            <ion-label>
+              <p>&#8226;&#8226;&#8226;&#8226; {{ card.last4 }}</p>
+            </ion-label>
+            <ion-button fill="clear" color="dark" slot="end" (click)="onDeleteCard(card)">
+              {{ 'DELETE' | translate }}
+            </ion-button>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="ion-margin-vertical ion-justify-content-center" *ngIf="isLoadingViewVisible">
+      <ion-col size-xs="12" size-lg="9">
+        <ngx-skeleton-loader count="12" [theme]="{ 'border-radius': '0', height: '70px' }">
+        </ngx-skeleton-loader>
+      </ion-col>
+    </ion-row>
+
+  </ion-grid>
+
+</ion-content>
+<ion-footer>
+  <ion-tab-bar>
+
+    <ion-tab-button tab="home" layout="icon-top">
+      <img style="max-width: 50%; margin-top:inherit;object-fit: contain;" src="../../../assets/imgs/home.png">
+      <ion-label>{{ 'HOME' | translate }}</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="browse" layout="icon-top">
+      <img  style="max-width: 50%; margin-top:inherit;object-fit: contain;" src="../../../assets/imgs/squares.svg" >
+      <ion-label>{{ 'BROWSE' | translate }}</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="account/favorites" layout="icon-top" >
+      <img   style="max-width: 50%;max-height:50%; margin-top:inherit;"  src="../../../assets/imgs/heart.svg">
+      <ion-label style="font-size: inherit;">{{ 'FAVORITES' | translate }}</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="cart" layout="icon-top">
+      <img  style="max-width: 50%;max-height:50%; margin-top:inherit;" src="../../../assets/imgs/shopping_cart.svg" >
+      <ion-label>{{ 'CART' | translate }}</ion-label>
+      <ion-badge style="font-size: inherit;" color="light" 
+      *ngIf="preference.cartCount">
+      {{ preference.cartCount }}
+    </ion-badge>
+    </ion-tab-button>
+    <ion-tab-button tab="account" layout="icon-top">
+      <img  style="max-width: 50%;max-height:50%; margin-top:inherit;" src="../../../assets/imgs/profile.svg" >
+      <ion-label>{{ 'ACCOUNT' | translate }}</ion-label>
+    </ion-tab-button>
+
+  </ion-tab-bar>
+
+ 
+</ion-footer>

@@ -1,0 +1,47 @@
+<ion-card style="box-shadow: none;" >
+ 
+  <p class="ion-no-margin" *ngIf="item.salePrice" style="text-align: right;" >
+    <ion-badge  style="border-radius: 14px;font-style: italic;font-size: 14px; " color="danger">{{ item.discount | percent }}-</ion-badge>
+    
+  </p>
+ 
+    <img style="display: initial;"src="./assets/imgs/placeholder.png"
+      [customObservable]="scrollObservable"
+      [lazyLoad]="item.featuredImageThumb?.url()" />
+ 
+
+  <ion-card-content style="margin:0;padding: 0; width: initial" text-center>
+
+    <ion-text style="text-align: start;" color="dark">
+      <p class="link ellipsis text-medium black">{{item.name}} </p>
+    </ion-text> 
+    <ion-text color="dark">
+      <p  style="background-color: #f4f5f8;width: fit-content;"class="text-small black">{{item.category.name}}</p>
+    </ion-text> 
+
+    <ion-text *ngIf="item.salePrice" style="display: flex; flex-direction: row;justify-content: flex-start;" color="medium">
+      <s class="bold" color="gray" style="font-size:14px" >
+        {{ item.price | currency:"JD ":"symbol" }}
+      </s>
+    </ion-text>
+    <ion-text style="display: flex; flex-direction: row;justify-content: flex-start;" color="dark">
+      
+      <p class="ion-no-margin" *ngIf="item.salePrice">
+        <span class="bold" style="color: red;font-size: 16px;"> {{ item.salePrice | currency:"JD ":"symbol" }}&nbsp;</span>
+      </p>
+      <p style="color: red;font-size: 16px" class="ion-no-margin bold" *ngIf="!item.salePrice">
+         {{ item.price | currency:"JD ":"symbol" }}
+      </p>
+     
+    </ion-text>
+  <ion-rating [rate]="item.ratingAvg"
+  readonly="false"
+  size="small">
+</ion-rating>
+    <div>
+          
+    </div>
+    
+    
+  </ion-card-content>
+</ion-card> 
